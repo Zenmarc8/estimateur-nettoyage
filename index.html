@@ -39,3 +39,609 @@
       </div>
     </div>
   </header>
+
+  <!-- Bannière d'en-tête pour impression -->
+  <div class="hidden print:block max-w-7xl mx-auto p-4 border-b border-slate-300">
+    <h1 class="text-2xl font-bold text-slate-900">SOUMISSION ET RAPPORT DE VISITE TECHNIQUE</h1>
+    <p class="text-xs text-slate-600">Calcul basé sur les temps opératoires ISSA 540 et ventilation financière conforme.</p>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- Colonne GAUCHE : Formulaire & Dictée vocale -->
+    <section class="lg:col-span-5 space-y-6 no-print">
+      
+      <!-- Module Dictée Vocale -->
+      <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-microphone text-rose-600"></i> Dictée Vocale de Chantier
+          </h2>
+          <span id="voice-indicator" class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Inactif</span>
+        </div>
+        <p class="text-xs text-slate-500 mb-3">
+          Dictez naturellement lors de votre inspection. <br>
+          <span class="text-slate-700 italic">Ex: "Corridor 2500 pieds en tapis wand 15" ou "Bureau 30 corbeilles"</span>
+        </p>
+
+        <div class="flex gap-2">
+          <button id="btn-voice" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-semibold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition">
+            <i class="fa-solid fa-microphone-lines text-lg"></i>
+            <span id="btn-voice-text">Activer la dictée</span>
+          </button>
+        </div>
+        <div id="voice-transcript" class="mt-2 text-xs bg-slate-50 p-2.5 rounded border border-slate-200 min-h-[42px] text-slate-600 italic">
+          Les consignes dictées s'inscriront ici...
+        </div>
+      </div>
+
+      <!-- Module Saisie Manuelle Rapide -->
+      <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5">
+        <h2 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-list-check text-blue-600"></i> Ajout Manuel d'un Élément
+        </h2>
+
+        <form id="form-item" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Local / Pièce / Zone</label>
+            <input type="text" id="input-room" placeholder="Ex: Salle d'attente, Étage 2, Corridors..." value="Rez-de-chaussée" required class="w-full text-sm px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Type de travail & Équipement ISSA</label>
+            <select id="select-task" class="w-full text-sm px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+              <optgroup label="Tapis & Moquettes (ISSA 540)">
+                <option value="carpet_wand_8">Tapis - Extraction Wand 8" (Passages étroits/détours) [180 min/1000 pi²]</option>
+                <option value="carpet_wand_12">Tapis - Extraction Wand 12" standard [120 min/1000 pi²]</option>
+                <option value="carpet_wand_15" selected>Tapis - Extraction Wand 15" grandes surfaces [115 min/1000 pi²]</option>
+                <option value="carpet_crb_11">Tapis - Brossage CRB 11" mécanique [29 min/1000 pi²]</option>
+                <option value="carpet_crb_15">Tapis - Brossage CRB 15" mécanique [21.4 min/1000 pi²]</option>
+                <option value="carpet_rx20">Tapis - Extraction Tête rotative turbo 17" RX20 [15 min/1000 pi²]</option>
+                <option value="carpet_encapsulation">Tapis - Encapsulation / Bonnet 17" [54 min/1000 pi²]</option>
+                <option value="carpet_protecteur">Tapis - Traitement Protecteur / Scotchgard [10.2 min/1000 pi²]</option>
+                <option value="carpet_antibact">Tapis - Désodorisant / Antibactérien [10.2 min/1000 pi²]</option>
+              </optgroup>
+              <optgroup label="Planchers durs (ISSA 540)">
+                <option value="floor_strip">Tuile vinyle - Décapage complet (Machine 175 rpm) [75 min/1000 pi²]</option>
+                <option value="floor_wax">Tuile vinyle - Pose de cire / fini (Microfibre) [9.5 min/1000 pi²]</option>
+                <option value="floor_mop">Plancher dur - Vadrouille humide désinfectante [14.4 min/1000 pi²]</option>
+              </optgroup>
+              <optgroup label="Blocs Sanitaires & Toilettes (ISSA 540)">
+                <option value="restroom_toilet">Toilette - Nettoyage complet & désinfection [1.5 min / unité]</option>
+                <option value="restroom_urinal">Urinoir - Nettoyage & détartrage [1.5 min / unité]</option>
+                <option value="restroom_sink">Lavabo / Évier sanitaire - Nettoyage & miroir [1.0 min / unité]</option>
+              </optgroup>
+              <optgroup label="Bureaux & Ameublement (ISSA 540)">
+                <option value="office_desk">Bureau / Poste de travail - Époussetage [1.0 min / unité]</option>
+                <option value="office_trash">Poubelle / Panier à rebuts - Vider et religner [0.75 min / unité]</option>
+                <option value="upholstery_chair">Chaise en tissu - Extraction [10 min / fauteuil]</option>
+                <option value="upholstery_couch">Divan 3 places en tissu - Extraction complète [45 min / canapé]</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1" id="label-qty">Quantité (pi²)</label>
+              <input type="number" id="input-qty" value="1000" min="1" step="any" required class="w-full text-sm px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Fréquence annuelle</label>
+              <select id="select-freq" class="w-full text-sm px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+                <option value="1">1 fois / an (Annuel)</option>
+                <option value="2">2 fois / an (Semi-annuel)</option>
+                <option value="4">4 fois / an (Trimestriel)</option>
+                <option value="12">12 fois / an (Mensuel)</option>
+                <option value="52">52 fois / an (Hebdomadaire)</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg shadow transition">
+            <i class="fa-solid fa-plus-circle mr-1"></i> Ajouter à la lecture
+          </button>
+        </form>
+      </div>
+
+      <!-- Paramètres du Modèle Financier -->
+      <div class="bg-slate-50 rounded-xl border border-slate-200 p-4">
+        <h3 class="text-xs font-bold text-slate-700 mb-2 uppercase tracking-wider flex items-center gap-1">
+          <i class="fa-solid fa-sliders text-slate-500"></i> Paramètres financiers actifs
+        </h3>
+        <div class="grid grid-cols-2 gap-2 text-xs text-slate-600">
+          <div>Taux horaire de production : <span class="font-bold text-slate-900">158,00 $/h</span></div>
+          <div>Taux horaire route : <span class="font-bold text-slate-900">98,75 $/h</span></div>
+          <div>Main d'œuvre directe : <span class="font-bold text-slate-900">43,54 %</span></div>
+          <div>Marge nette bénéficiaire : <span class="font-bold text-emerald-700">10,13 %</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Colonne DROITE : Résultats, Vues et Ventilation -->
+    <section class="lg:col-span-7 space-y-6">
+
+      <!-- Carte Synthèse Financière Globale -->
+      <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b pb-4 mb-4 gap-2">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900">Synthèse du Devis</h2>
+            <p class="text-xs text-slate-500">Estimé d'équipe selon cadences ISSA et barème de 158 $/h</p>
+          </div>
+          <div class="text-right">
+            <div class="text-2xl font-black text-blue-700" id="total-price-visit">0,00 $</div>
+            <div class="text-xs text-slate-500">par intervention / visite</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center mb-4">
+          <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+            <div class="text-xs text-blue-700 font-medium">Temps / visite</div>
+            <div class="text-base font-bold text-blue-900" id="total-hours-visit">0,0 h</div>
+            <div class="text-[10px] text-blue-500" id="total-min-visit">(0 min)</div>
+          </div>
+          <div class="bg-indigo-50 p-3 rounded-lg border border-indigo-100">
+            <div class="text-xs text-indigo-700 font-medium">Temps annuel</div>
+            <div class="text-base font-bold text-indigo-900" id="total-hours-year">0,0 h</div>
+            <div class="text-[10px] text-indigo-500">sur 1 an</div>
+          </div>
+          <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-100">
+            <div class="text-xs text-emerald-700 font-medium">Total annuel</div>
+            <div class="text-base font-bold text-emerald-900" id="total-price-year">0,00 $</div>
+            <div class="text-[10px] text-emerald-600">facturation/an</div>
+          </div>
+          <div class="bg-amber-50 p-3 rounded-lg border border-amber-100">
+            <div class="text-xs text-amber-800 font-medium">Profit net estimé</div>
+            <div class="text-base font-bold text-amber-900" id="total-profit-visit">0,00 $</div>
+            <div class="text-[10px] text-amber-700">(10,13% net)</div>
+          </div>
+        </div>
+
+        <!-- Tableau de Ventilation Financière -->
+        <div class="border rounded-lg overflow-hidden text-xs">
+          <table class="w-full">
+            <thead class="bg-slate-100 text-slate-700 font-semibold border-b">
+              <tr>
+                <th class="text-left p-2">Catégorie Budgétaire</th>
+                <th class="text-center p-2">% Alloué</th>
+                <th class="text-right p-2">Montant / Visite</th>
+                <th class="text-right p-2">Montant Annuel</th>
+              </tr>
+            </thead>
+            <tbody id="breakdown-tbody" class="divide-y divide-slate-200">
+              <!-- Rempli par JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Onglets de visualisations : Par Pièce vs Par Item -->
+      <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5">
+        <div class="flex items-center justify-between border-b pb-3 mb-4">
+          <div class="flex gap-2">
+            <button id="tab-room" class="px-3 py-1.5 rounded-md font-bold text-xs bg-blue-600 text-white shadow transition">
+              <i class="fa-solid fa-door-open mr-1"></i> Fiche détaillée par Pièce
+            </button>
+            <button id="tab-item" class="px-3 py-1.5 rounded-md font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+              <i class="fa-solid fa-cubes-stacked mr-1"></i> Résumé consolidé par Item
+            </button>
+          </div>
+          <span class="text-xs text-slate-400" id="count-items">0 éléments enregistrés</span>
+        </div>
+
+        <!-- Vue 1 : Par Pièce -->
+        <div id="view-room" class="space-y-4">
+          <div id="container-rooms" class="space-y-4">
+            <p class="text-center py-8 text-xs text-slate-400 italic">Aucune donnée saisie pour le moment.</p>
+          </div>
+        </div>
+
+        <!-- Vue 2 : Consolidé par Item -->
+        <div id="view-item" class="hidden">
+          <div class="border rounded-lg overflow-x-auto text-xs">
+            <table class="w-full">
+              <thead class="bg-slate-100 text-slate-700 font-semibold border-b">
+                <tr>
+                  <th class="text-left p-2">Item & Tâche</th>
+                  <th class="text-center p-2">Quantité totale</th>
+                  <th class="text-center p-2">Temps unitaire ISSA</th>
+                  <th class="text-right p-2">Temps total</th>
+                  <th class="text-right p-2">Total estimé</th>
+                </tr>
+              </thead>
+              <tbody id="container-items" class="divide-y divide-slate-200">
+                <!-- Rempli par JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    // ----------------------------------------------------
+    // BIBLIOTHÈQUE ISSA 540 & TAUX
+    // ----------------------------------------------------
+    const TASK_CATALOG = {
+      carpet_wand_8: { name: 'Tapis - Wand 8 pouces', unit: 'pi²', type: 'area', timePer1000: 180.0, rateHr: 158.0 },
+      carpet_wand_12: { name: 'Tapis - Wand 12 pouces', unit: 'pi²', type: 'area', timePer1000: 120.0, rateHr: 158.0 },
+      carpet_wand_15: { name: 'Tapis - Wand 15 pouces', unit: 'pi²', type: 'area', timePer1000: 115.0, rateHr: 158.0 },
+      carpet_crb_11: { name: 'Tapis - Brossage CRB 11"', unit: 'pi²', type: 'area', timePer1000: 29.23, rateHr: 158.0 },
+      carpet_crb_15: { name: 'Tapis - Brossage CRB 15"', unit: 'pi²', type: 'area', timePer1000: 21.44, rateHr: 158.0 },
+      carpet_rx20: { name: 'Tapis - Tête Rotative RX20 17"', unit: 'pi²', type: 'area', timePer1000: 15.0, rateHr: 158.0 },
+      carpet_encapsulation: { name: 'Tapis - Encapsulation 17"', unit: 'pi²', type: 'area', timePer1000: 54.0, rateHr: 158.0 },
+      carpet_protecteur: { name: 'Tapis - Traitement Protecteur', unit: 'pi²', type: 'area', timePer1000: 10.2, rateHr: 158.0 },
+      carpet_antibact: { name: 'Tapis - Antibactérien / Odeurs', unit: 'pi²', type: 'area', timePer1000: 10.2, rateHr: 158.0 },
+      floor_strip: { name: 'Tuile vinyle - Décapage', unit: 'pi²', type: 'area', timePer1000: 75.0, rateHr: 158.0 },
+      floor_wax: { name: 'Tuile vinyle - Pose cire/fini', unit: 'pi²', type: 'area', timePer1000: 9.5, rateHr: 158.0 },
+      floor_mop: { name: 'Plancher dur - Mopping désinfectant', unit: 'pi²', type: 'area', timePer1000: 14.4, rateHr: 158.0 },
+      restroom_toilet: { name: 'Toilette - Nettoyage complet', unit: 'unité', type: 'count', minutesEach: 1.5, rateHr: 158.0 },
+      restroom_urinal: { name: 'Urinoir - Nettoyage & détartrage', unit: 'unité', type: 'count', minutesEach: 1.5, rateHr: 158.0 },
+      restroom_sink: { name: 'Lavabo sanitaire - Lavage & miroir', unit: 'unité', type: 'count', minutesEach: 1.0, rateHr: 158.0 },
+      office_desk: { name: 'Bureau - Dépoussiérage', unit: 'unité', type: 'count', minutesEach: 1.0, rateHr: 158.0 },
+      office_trash: { name: 'Poubelle / Panier - Vider & religner', unit: 'unité', type: 'count', minutesEach: 0.75, rateHr: 158.0 },
+      upholstery_chair: { name: 'Fauteuil tissu - Extraction', unit: 'unité', type: 'count', minutesEach: 10.0, rateHr: 158.0 },
+      upholstery_couch: { name: 'Canapé 3 places - Extraction', unit: 'unité', type: 'count', minutesEach: 45.0, rateHr: 158.0 }
+    };
+
+    // ----------------------------------------------------
+    // VENTILATION DU MODÈLE FINANCIER (EXCEL 2026)
+    // ----------------------------------------------------
+    const FINANCIAL_BREAKDOWN = [
+      { name: 'Main-d’œuvre terrain directe (Technicien + Aide)', pct: 43.5443, color: 'text-blue-900 font-semibold' },
+      { name: 'Vente, Marketing & Administration', pct: 28.3544, color: 'text-slate-700' },
+      { name: 'Frais généraux & Loyer d’atelier', pct: 8.9114, color: 'text-slate-700' },
+      { name: 'Véhicule, Camion & Essence (Transport)', pct: 6.0759, color: 'text-slate-700' },
+      { name: 'Équipements, Wands & Produits consommables', pct: 2.9873, color: 'text-slate-700' },
+      { name: 'Bénéfice net d’exploitation (Profit)', pct: 10.1266, color: 'text-emerald-700 font-bold' }
+    ];
+
+    let entries = [];
+
+    // ----------------------------------------------------
+    // GESTION DU FORMULAIRE MANUEL
+    // ----------------------------------------------------
+    const formItem = document.getElementById('form-item');
+    const selectTask = document.getElementById('select-task');
+    const labelQty = document.getElementById('label-qty');
+
+    selectTask.addEventListener('change', () => {
+      const task = TASK_CATALOG[selectTask.value];
+      labelQty.textContent = `Quantité (${task.unit})`;
+    });
+
+    formItem.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const room = document.getElementById('input-room').value.trim() || 'Zone générale';
+      const taskKey = selectTask.value;
+      const qty = parseFloat(document.getElementById('input-qty').value) || 0;
+      const freq = parseInt(document.getElementById('select-freq').value, 10) || 1;
+
+      addEntry(room, taskKey, qty, freq);
+      document.getElementById('input-qty').value = '';
+    });
+
+    function addEntry(room, taskKey, qty, freq) {
+      const task = TASK_CATALOG[taskKey];
+      if (!task || qty <= 0) return;
+
+      let minutes = 0;
+      if (task.type === 'area') {
+        minutes = (qty / 1000) * task.timePer1000;
+      } else {
+        minutes = qty * task.minutesEach;
+      }
+
+      const hours = minutes / 60;
+      const priceVisit = hours * task.rateHr;
+      const priceYear = priceVisit * freq;
+
+      entries.push({
+        id: Date.now() + Math.random(),
+        room,
+        taskKey,
+        taskName: task.name,
+        unit: task.unit,
+        qty,
+        freq,
+        minutes,
+        hours,
+        priceVisit,
+        priceYear
+      });
+
+      render();
+    }
+
+    function removeEntry(id) {
+      entries = entries.filter(e => e.id !== id);
+      render();
+    }
+
+    // ----------------------------------------------------
+    // DICTÉE VOCALE AUTOMATISÉE
+    // ----------------------------------------------------
+    const btnVoice = document.getElementById('btn-voice');
+    const btnVoiceText = document.getElementById('btn-voice-text');
+    const voiceIndicator = document.getElementById('voice-indicator');
+    const voiceTranscript = document.getElementById('voice-transcript');
+
+    let recognition = null;
+    let isListening = false;
+
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = false;
+      recognition.lang = 'fr-CA';
+
+      recognition.onstart = () => {
+        isListening = true;
+        voiceIndicator.textContent = "À l'écoute...";
+        voiceIndicator.className = "text-xs font-semibold px-2 py-0.5 rounded bg-rose-100 text-rose-700 animate-pulse";
+        btnVoiceText.textContent = "Arrêter la dictée";
+      };
+
+      recognition.onresult = (event) => {
+        const text = event.results[event.results.length - 1][0].transcript.toLowerCase();
+        voiceTranscript.textContent = `Entendu : "${text}"`;
+        parseVoiceCommand(text);
+      };
+
+      recognition.onerror = (event) => {
+        console.error("Erreur vocale", event.error);
+        stopListening();
+      };
+
+      recognition.onend = () => {
+        stopListening();
+      };
+    } else {
+      btnVoice.disabled = true;
+      btnVoice.className = "flex-1 bg-slate-300 text-slate-500 font-semibold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 cursor-not-allowed";
+      voiceIndicator.textContent = "Non supporté";
+      voiceTranscript.textContent = "La reconnaissance vocale nécessite Chrome ou Safari en HTTPS.";
+    }
+
+    btnVoice.addEventListener('click', () => {
+      if (!recognition) return;
+      if (isListening) {
+        recognition.stop();
+      } else {
+        recognition.start();
+      }
+    });
+
+    function stopListening() {
+      isListening = false;
+      voiceIndicator.textContent = "Inactif";
+      voiceIndicator.className = "text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500";
+      btnVoiceText.textContent = "Activer la dictée";
+    }
+
+    function parseVoiceCommand(text) {
+      const currentRoom = document.getElementById('input-room').value.trim() || 'Inspection en cours';
+      const numbers = text.match(/\d+/g);
+      const qty = numbers ? parseFloat(numbers[0]) : 1;
+
+      let detectedTask = null;
+
+      if (text.includes('tapis') || text.includes('moquette')) {
+        if (text.includes('8') || text.includes('huit')) detectedTask = 'carpet_wand_8';
+        else if (text.includes('15') || text.includes('quinze')) detectedTask = 'carpet_wand_15';
+        else if (text.includes('rx') || text.includes('rotatif')) detectedTask = 'carpet_rx20';
+        else if (text.includes('encapsulation') || text.includes('bonnet')) detectedTask = 'carpet_encapsulation';
+        else if (text.includes('brossage') || text.includes('crb')) detectedTask = 'carpet_crb_15';
+        else detectedTask = 'carpet_wand_15';
+      } else if (text.includes('décapage') || text.includes('décaper')) {
+        detectedTask = 'floor_strip';
+      } else if (text.includes('cire') || text.includes('cirer')) {
+        detectedTask = 'floor_wax';
+      } else if (text.includes('toilette') || text.includes('wc')) {
+        detectedTask = 'restroom_toilet';
+      } else if (text.includes('urinoir')) {
+        detectedTask = 'restroom_urinal';
+      } else if (text.includes('lavabo') || text.includes('évier')) {
+        detectedTask = 'restroom_sink';
+      } else if (text.includes('bureau') || text.includes('table')) {
+        detectedTask = 'office_desk';
+      } else if (text.includes('poubelle') || text.includes('corbeille')) {
+        detectedTask = 'office_trash';
+      }
+
+      if (detectedTask) {
+        addEntry(currentRoom, detectedTask, qty, 1);
+        voiceTranscript.textContent += ` ➔ Ajouté : ${qty} ${TASK_CATALOG[detectedTask].unit} (${TASK_CATALOG[detectedTask].name})`;
+      }
+    }
+
+    // ----------------------------------------------------
+    // RENDU DES CALCULS ET DES VUES
+    // ----------------------------------------------------
+    function render() {
+      document.getElementById('count-items').textContent = `${entries.length} éléments enregistrés`;
+
+      let totalMinVisit = 0;
+      let totalPriceVisit = 0;
+      let totalHoursYear = 0;
+      let totalPriceYear = 0;
+
+      entries.forEach(e => {
+        totalMinVisit += e.minutes;
+        totalPriceVisit += e.priceVisit;
+        totalHoursYear += (e.hours * e.freq);
+        totalPriceYear += e.priceYear;
+      });
+
+      const totalHoursVisit = totalMinVisit / 60;
+      const totalProfitVisit = totalPriceVisit * 0.101266;
+
+      document.getElementById('total-hours-visit').textContent = `${totalHoursVisit.toFixed(2)} h`;
+      document.getElementById('total-min-visit').textContent = `(${Math.round(totalMinVisit)} min)`;
+      document.getElementById('total-price-visit').textContent = `${totalPriceVisit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}`;
+      document.getElementById('total-hours-year').textContent = `${totalHoursYear.toFixed(1)} h`;
+      document.getElementById('total-price-year').textContent = `${totalPriceYear.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}`;
+      document.getElementById('total-profit-visit').textContent = `${totalProfitVisit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}`;
+
+      // Tableau de ventilation financière
+      const tbodyBreakdown = document.getElementById('breakdown-tbody');
+      tbodyBreakdown.innerHTML = '';
+      FINANCIAL_BREAKDOWN.forEach(item => {
+        const valVisit = (totalPriceVisit * item.pct) / 100;
+        const valYear = (totalPriceYear * item.pct) / 100;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="p-2 ${item.color}">${item.name}</td>
+          <td class="p-2 text-center text-slate-500 font-mono">${item.pct.toFixed(2)} %</td>
+          <td class="p-2 text-right font-medium">${valVisit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</td>
+          <td class="p-2 text-right font-medium text-slate-600">${valYear.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</td>
+        `;
+        tbodyBreakdown.appendChild(row);
+      });
+
+      renderRoomView();
+      renderItemView();
+    }
+
+    function renderRoomView() {
+      const container = document.getElementById('container-rooms');
+      container.innerHTML = '';
+
+      if (entries.length === 0) {
+        container.innerHTML = '<p class="text-center py-8 text-xs text-slate-400 italic">Aucune donnée saisie pour le moment.</p>';
+        return;
+      }
+
+      const grouped = {};
+      entries.forEach(e => {
+        if (!grouped[e.room]) grouped[e.room] = [];
+        grouped[e.room].push(e);
+      });
+
+      for (const room in grouped) {
+        const items = grouped[room];
+        let roomMin = 0;
+        let roomPrice = 0;
+        items.forEach(i => { roomMin += i.minutes; roomPrice += i.priceVisit; });
+
+        const card = document.createElement('div');
+        card.className = "border rounded-lg p-3 bg-slate-50 border-slate-200";
+        card.innerHTML = `
+          <div class="flex justify-between items-center border-b pb-2 mb-2">
+            <h4 class="font-bold text-sm text-slate-800 flex items-center gap-1.5">
+              <i class="fa-solid fa-location-dot text-blue-500"></i> ${room}
+            </h4>
+            <div class="text-right">
+              <span class="text-xs font-bold text-blue-900">${(roomMin / 60).toFixed(2)} h (${Math.round(roomMin)} min)</span>
+              <span class="text-xs font-black text-slate-700 ml-2">${roomPrice.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</span>
+            </div>
+          </div>
+          <div class="space-y-1.5">
+            ${items.map(item => `
+              <div class="flex items-center justify-between text-xs bg-white p-2 rounded border border-slate-200">
+                <div>
+                  <span class="font-semibold text-slate-800">${item.taskName}</span>
+                  <span class="text-slate-500 ml-1">(${item.qty} ${item.unit} × ${item.freq}/an)</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="text-slate-600 font-mono">${Math.round(item.minutes)} min</span>
+                  <span class="font-bold text-slate-800">${item.priceVisit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</span>
+                  <button onclick="removeEntry(${item.id})" class="text-rose-500 hover:text-rose-700 no-print ml-1" title="Supprimer">
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        container.appendChild(card);
+      }
+    }
+
+    function renderItemView() {
+      const container = document.getElementById('container-items');
+      container.innerHTML = '';
+
+      const grouped = {};
+      entries.forEach(e => {
+        if (!grouped[e.taskKey]) {
+          grouped[e.taskKey] = {
+            taskName: e.taskName,
+            unit: e.unit,
+            totalQty: 0,
+            totalMin: 0,
+            totalPrice: 0,
+            timePer1000: TASK_CATALOG[e.taskKey].timePer1000,
+            minutesEach: TASK_CATALOG[e.taskKey].minutesEach
+          };
+        }
+        grouped[e.taskKey].totalQty += e.qty;
+        grouped[e.taskKey].totalMin += e.minutes;
+        grouped[e.taskKey].totalPrice += e.priceVisit;
+      });
+
+      for (const key in grouped) {
+        const item = grouped[key];
+        const cadence = item.timePer1000 ? `${item.timePer1000} min / 1000 pi²` : `${item.minutesEach} min / unité`;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="p-2 font-medium text-slate-800">${item.taskName}</td>
+          <td class="p-2 text-center font-bold">${item.totalQty.toLocaleString('fr-CA')} ${item.unit}</td>
+          <td class="p-2 text-center text-slate-500 font-mono">${cadence}</td>
+          <td class="p-2 text-right font-mono">${(item.totalMin / 60).toFixed(2)} h (${Math.round(item.totalMin)} min)</td>
+          <td class="p-2 text-right font-bold text-blue-900">${item.totalPrice.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</td>
+        `;
+        container.appendChild(row);
+      }
+    }
+
+    // Navigation onglets
+    const tabRoom = document.getElementById('tab-room');
+    const tabItem = document.getElementById('tab-item');
+    const viewRoom = document.getElementById('view-room');
+    const viewItem = document.getElementById('view-item');
+
+    tabRoom.addEventListener('click', () => {
+      tabRoom.className = "px-3 py-1.5 rounded-md font-bold text-xs bg-blue-600 text-white shadow transition";
+      tabItem.className = "px-3 py-1.5 rounded-md font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
+      viewRoom.classList.remove('hidden');
+      viewItem.classList.add('hidden');
+    });
+
+    tabItem.addEventListener('click', () => {
+      tabItem.className = "px-3 py-1.5 rounded-md font-bold text-xs bg-blue-600 text-white shadow transition";
+      tabRoom.className = "px-3 py-1.5 rounded-md font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
+      viewItem.classList.remove('hidden');
+      viewRoom.classList.add('hidden');
+    });
+
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      if (confirm('Voulez-vous réinitialiser tous les relevés ?')) {
+        entries = [];
+        render();
+      }
+    });
+
+    // Exemple de test complet
+    document.getElementById('btn-sample').addEventListener('click', () => {
+      entries = [];
+      addEntry('Aires ouvertes & Corridors', 'carpet_wand_15', 2500, 1);
+      addEntry('Aires ouvertes & Corridors', 'carpet_encapsulation', 2500, 2);
+      addEntry('Cafétéria & Entrée', 'floor_strip', 1000, 1);
+      addEntry('Cafétéria & Entrée', 'floor_wax', 1000, 1);
+      addEntry('Bureaux administratifs', 'office_desk', 30, 52);
+      addEntry('Bureaux administratifs', 'office_trash', 30, 52);
+      addEntry('Sanitaires Hommes/Femmes', 'restroom_toilet', 5, 52);
+      addEntry('Sanitaires Hommes/Femmes', 'restroom_urinal', 4, 52);
+      addEntry('Sanitaires Hommes/Femmes', 'restroom_sink', 4, 52);
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
