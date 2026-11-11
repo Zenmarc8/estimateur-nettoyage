@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Estimateur Pro - Nettoyage & Ventilation Financière</title>
+  <title>Estimateur Pro - Nettoyage & Relevé de Chantier</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -75,21 +75,66 @@
         </div>
       </div>
 
-      <!-- Module Saisie Manuelle Rapide -->
+      <!-- Module Saisie Manuelle Rapide & Sélecteur Intelligent de Pièces -->
       <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5">
-        <h2 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
-          <i class="fa-solid fa-list-check text-blue-600"></i> Ajout Manuel d'un Élément
+        <h2 class="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-list-check text-blue-600"></i> Ajout d'un Élément à la Soumission
         </h2>
 
         <form id="form-item" class="space-y-4">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Local / Pièce / Zone</label>
-            <input type="text" id="input-room" placeholder="Ex: Salle d'attente, Étage 2, Corridors..." value="Rez-de-chaussée" required class="w-full text-sm px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+          
+          <!-- Bloc Sélection de Pièce -->
+          <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-3">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide">
+                <i class="fa-solid fa-building text-blue-600 mr-1"></i> Type d'immeuble
+              </label>
+              <button type="button" id="btn-toggle-search" class="text-[11px] text-blue-600 hover:text-blue-800 font-semibold">
+                <i class="fa-solid fa-magnifying-glass mr-1"></i> Recherche par mot-clé
+              </button>
+            </div>
+
+            <!-- Liste déroulante 1 : Catégorie d'immeuble -->
+            <select id="select-building-type" class="w-full text-xs font-medium px-3 py-2 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+              <!-- Rempli en JS -->
+            </select>
+
+            <!-- Barre de recherche rapide (masquable) -->
+            <div id="box-search-room" class="hidden">
+              <div class="relative">
+                <input type="text" id="input-search-room" placeholder="Rechercher une pièce (ex: conférence, cafeteria, chambre)..." class="w-full text-xs pl-8 pr-3 py-1.5 bg-white border border-blue-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+                <i class="fa-solid fa-magnifying-glass text-slate-400 text-xs absolute left-2.5 top-2.5"></i>
+              </div>
+            </div>
+
+            <!-- Liste déroulante 2 : Pièces du bâtiment -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">
+                <i class="fa-solid fa-door-open text-blue-600 mr-1"></i> Pièce ou local
+              </label>
+              <select id="select-room-type" class="w-full text-xs font-semibold px-3 py-2 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+                <!-- Rempli en JS -->
+              </select>
+            </div>
+
+            <!-- Champ texte dynamique si AUTRE ou personnalisation -->
+            <div id="box-custom-room" class="pt-1">
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nom personnalisé ou détail du local :</label>
+              <div class="flex gap-2">
+                <input type="text" id="input-final-room" placeholder="Précisez le nom (ex: Chambre d'amis 2e étage)" required class="flex-1 text-xs px-3 py-2 bg-white border border-amber-300 rounded-md focus:ring-2 focus:ring-amber-500 outline-none font-medium">
+                <button type="button" id="btn-save-custom-room" title="Enregistrer dans ma banque de données" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-2 rounded-md transition font-semibold">
+                  <i class="fa-solid fa-floppy-disk mr-1"></i> Mémoriser
+                </button>
+              </div>
+            </div>
           </div>
 
+          <!-- Type de tâche / Équipement ISSA 540 -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Type de travail & Équipement ISSA</label>
-            <select id="select-task" class="w-full text-sm px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+            <label class="block text-xs font-bold text-slate-700 mb-1">
+              <i class="fa-solid fa-screwdriver-wrench text-blue-600 mr-1"></i> Type de travail & Équipement ISSA
+            </label>
+            <select id="select-task" class="w-full text-xs px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
               <optgroup label="Tapis & Moquettes (ISSA 540)">
                 <option value="carpet_wand_8">Tapis - Extraction Wand 8" (Passages étroits/détours) [180 min/1000 pi²]</option>
                 <option value="carpet_wand_12">Tapis - Extraction Wand 12" standard [120 min/1000 pi²]</option>
@@ -120,6 +165,7 @@
             </select>
           </div>
 
+          <!-- Quantité & Fréquence -->
           <div class="grid grid-cols-2 gap-3">
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1" id="label-qty">Quantité (pi²)</label>
@@ -127,7 +173,7 @@
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">Fréquence annuelle</label>
-              <select id="select-freq" class="w-full text-sm px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+              <select id="select-freq" class="w-full text-xs px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
                 <option value="1">1 fois / an (Annuel)</option>
                 <option value="2">2 fois / an (Semi-annuel)</option>
                 <option value="4">4 fois / an (Trimestriel)</option>
@@ -149,7 +195,7 @@
           <i class="fa-solid fa-sliders text-slate-500"></i> Paramètres financiers actifs
         </h3>
         <div class="grid grid-cols-2 gap-2 text-xs text-slate-600">
-          <div>Taux horaire de production : <span class="font-bold text-slate-900">158,00 $/h</span></div>
+          <div>Taux horaire production : <span class="font-bold text-slate-900">158,00 $/h</span></div>
           <div>Taux horaire route : <span class="font-bold text-slate-900">98,75 $/h</span></div>
           <div>Main d'œuvre directe : <span class="font-bold text-slate-900">43,54 %</span></div>
           <div>Marge nette bénéficiaire : <span class="font-bold text-emerald-700">10,13 %</span></div>
@@ -263,6 +309,168 @@
 
   <script>
     // ----------------------------------------------------
+    // BANQUE DE DONNÉES COMPLÈTE DES BÂTIMENTS ET PIÈCES
+    // ----------------------------------------------------
+    const DEFAULT_BUILDINGS_DB = {
+      "1. Résidentiel": [
+        "Chambre principale", "Chambre secondaire", "Chambre d'enfant", "Chambre d'amis", "Salon",
+        "Salle familiale", "Salle à manger", "Cuisine", "Cuisinette", "Coin-repas", "Bureau à domicile",
+        "Salle de bain complète", "Salle d'eau", "Salle de douche", "Salle de lavage", "Buanderie",
+        "Walk-in", "Garde-robe", "Vestibule", "Hall d'entrée", "Corridor", "Escalier",
+        "Sous-sol aménagé", "Sous-sol non aménagé", "Salle de jeux", "Salle de cinéma maison",
+        "Véranda", "Solarium", "Salle de rangement", "Débarras", "Garage", "Atelier résidentiel",
+        "Cave à vin", "Grenier", "Salle mécanique", "Autre"
+      ],
+      "2. Bureaux et administration": [
+        "Bureau individuel", "Bureau de direction", "Bureau partagé", "Aire de travail ouverte",
+        "Poste de travail", "Salle de conférence", "Salle de réunion", "Salle de formation",
+        "Salle de présentation", "Salle de visioconférence", "Réception", "Hall d'accueil",
+        "Salle d'attente", "Aire de détente", "Salle de repos", "Cuisine des employés",
+        "Cuisinette", "Cafétéria", "Salle à manger des employés", "Salle d'impression",
+        "Salle de photocopieurs", "Salle informatique", "Salle de serveurs", "Centre d'appels",
+        "Archives", "Salle de classement", "Salle de courrier", "Salle de reprographie",
+        "Local administratif", "Corridor", "Escalier", "Ascenseur", "Vestibule", "Vestiaire",
+        "Toilettes", "Salle de bain", "Local d'entretien ménager", "Salle de rangement", "Autre"
+      ],
+      "3. Industriel et usine": [
+        "Aire de production", "Plancher de production", "Ligne de production", "Zone d'assemblage",
+        "Zone de fabrication", "Atelier mécanique", "Atelier de réparation", "Atelier de soudure",
+        "Atelier de peinture", "Atelier d'usinage", "Atelier de menuiserie", "Atelier d'ébénisterie",
+        "Atelier de maintenance", "Atelier électrique", "Atelier d'entretien", "Zone d'emballage",
+        "Zone d'expédition", "Réception des marchandises", "Quai de chargement", "Entrepôt",
+        "Aire d'entreposage", "Zone de stockage", "Chambre froide", "Congélateur industriel",
+        "Salle de contrôle", "Salle des opérateurs", "Salle électrique", "Local mécanique",
+        "Local technique", "Local de compresseurs", "Local de pompes", "Local de chaudières",
+        "Salle des machines", "Salle des équipements", "Salle de ventilation", "Local de filtration",
+        "Salle de lavage industriel", "Zone de décontamination", "Vestiaire des employés",
+        "Douches industrielles", "Toilettes industrielles", "Cafétéria", "Salle de repas",
+        "Salle de repos", "Bureau d'usine", "Salle de supervision", "Laboratoire de contrôle qualité",
+        "Corridor industriel", "Escalier industriel", "Autre"
+      ],
+      "4. Commercial et magasins": [
+        "Surface de vente", "Aire commerciale", "Salle d'exposition", "Salle de montre",
+        "Vitrine intérieure", "Zone de caisse", "Comptoir de service", "Comptoir d'accueil",
+        "Cabine d'essayage", "Réserve", "Arrière-boutique", "Entrepôt commercial",
+        "Réception des marchandises", "Préparation des commandes", "Aire d'attente",
+        "Salle de repos des employés", "Bureau administratif", "Cuisine des employés",
+        "Cafétéria", "Toilettes publiques", "Salle de bain des employés", "Corridor",
+        "Hall d'entrée", "Escalier", "Ascenseur", "Aire commune de centre commercial",
+        "Aire de restauration", "Kiosque commercial", "Autre"
+      ],
+      "5. Restaurants et hôtels": [
+        "Salle à manger", "Salle privée", "Salle de réception", "Bar", "Comptoir de service",
+        "Cuisine commerciale", "Cuisine de préparation", "Zone de cuisson", "Zone de plonge",
+        "Laverie de vaisselle", "Chambre froide", "Chambre de congélation", "Garde-manger",
+        "Réserve alimentaire", "Zone de livraison", "Salle des employés", "Vestiaire",
+        "Toilettes publiques", "Toilettes du personnel", "Hall d'entrée", "Réception d'hôtel",
+        "Lobby", "Chambre d'hôtel", "Suite", "Salle de bain d'hôtel", "Corridor d'hôtel",
+        "Salle de réunion", "Salle de banquet", "Salle de déjeuner", "Cuisine d'hôtel",
+        "Buanderie d'hôtel", "Local d'entretien ménager", "Ascenseur", "Escalier", "Autre"
+      ],
+      "6. Santé et médical": [
+        "Salle d'attente", "Réception médicale", "Salle de consultation", "Salle d'examen",
+        "Salle de traitement", "Salle de soins", "Salle d'opération", "Salle de réveil",
+        "Chambre de patient", "Chambre privée", "Chambre semi-privée", "Salle commune",
+        "Salle de prélèvement", "Laboratoire médical", "Laboratoire d'analyse",
+        "Salle de radiologie", "Salle d'imagerie médicale", "Salle d'échographie",
+        "Salle de physiothérapie", "Salle de réadaptation", "Salle de stérilisation",
+        "Salle de désinfection", "Salle d'isolement", "Salle de médicaments", "Pharmacie",
+        "Salle du personnel médical", "Poste infirmier", "Vestiaire médical",
+        "Salle de repos du personnel", "Cuisine du personnel", "Cafétéria", "Toilettes",
+        "Salle de bain adaptée", "Corridor médical", "Ascenseur", "Escalier",
+        "Local biomédical", "Local technique", "Autre"
+      ],
+      "7. Laboratoires et sciences": [
+        "Laboratoire de recherche", "Laboratoire d'analyse", "Laboratoire chimique",
+        "Laboratoire biologique", "Laboratoire pharmaceutique", "Laboratoire alimentaire",
+        "Laboratoire microbiologique", "Laboratoire de contrôle qualité", "Salle blanche",
+        "Salle propre", "Salle de préparation", "Salle de pesée", "Salle d'échantillonnage",
+        "Salle de manipulation", "Salle de culture", "Salle d'incubation", "Salle de stérilisation",
+        "Salle de lavage de matériel", "Salle d'entreposage", "Chambre froide",
+        "Local de produits chimiques", "Local de déchets biologiques", "Vestiaire de laboratoire",
+        "Zone de décontamination", "Sas d'entrée", "Corridor contrôlé", "Autre"
+      ],
+      "8. Écoles et garderies": [
+        "Salle de classe", "Salle de cours", "Salle informatique", "Laboratoire scolaire",
+        "Bibliothèque", "Salle de lecture", "Salle d'étude", "Salle de conférence",
+        "Auditorium", "Amphithéâtre", "Gymnase", "Salle d'entraînement", "Vestiaire sportif",
+        "Douches", "Toilettes", "Garderie", "Salle de jeux", "Salle de sieste", "Salle de repos",
+        "Salle des enseignants", "Bureau de direction", "Secrétariat", "Réception",
+        "Cafétéria", "Cuisine", "Salle polyvalente", "Salle d'activités", "Corridor",
+        "Hall d'entrée", "Escalier", "Ascenseur", "Local d'entretien", "Local de rangement", "Autre"
+      ],
+      "9. Copropriétés et immeubles à logements": [
+        "Hall d'entrée", "Lobby", "Vestibule", "Corridor d'étage", "Corridor de sous-sol",
+        "Cage d'escalier", "Ascenseur", "Salle de courrier", "Salle des colis",
+        "Salle communautaire", "Salle multifonctionnelle", "Salle de réception",
+        "Salle de jeux", "Salle de cinéma", "Gym", "Salle d'entraînement", "Salle de yoga",
+        "Piscine intérieure", "Vestiaire de piscine", "Sauna", "Bain vapeur", "Salle de billard",
+        "Salle de lavage commune", "Buanderie", "Salle de rangement", "Casiers",
+        "Garage intérieur", "Stationnement intérieur", "Local à vélos", "Local à déchets",
+        "Local de recyclage", "Local mécanique", "Local électrique", "Salle des compteurs",
+        "Terrasse commune", "Cuisine commune", "Toilettes communes", "Autre"
+      ],
+      "10. Sport et loisirs": [
+        "Gymnase", "Salle d'entraînement", "Salle de musculation", "Salle de cardio",
+        "Studio de yoga", "Studio de danse", "Salle de spinning", "Salle d'aérobie",
+        "Salle de boxe", "Dojo", "Salle de combat", "Vestiaire hommes", "Vestiaire femmes",
+        "Vestiaire familial", "Douches", "Toilettes", "Piscine intérieure", "Piscine extérieure",
+        "Plage de piscine", "Sauna", "Bain vapeur", "Spa", "Salle de massage",
+        "Salle de physiothérapie", "Salle de réception", "Gradins", "Tribune",
+        "Salle des arbitres", "Salle des entraîneurs", "Salle d'équipement", "Corridor",
+        "Hall d'entrée", "Autre"
+      ],
+      "11. Institutions et bâtiments publics": [
+        "Hôtel de ville", "Bureau municipal", "Salle du conseil", "Salle communautaire",
+        "Centre communautaire", "Bibliothèque publique", "Salle de spectacle",
+        "Auditorium", "Théâtre", "Salle de réception", "Salle polyvalente", "Salle d'exposition",
+        "Musée", "Galerie d'art", "Centre culturel", "Centre de loisirs", "Centre de services",
+        "Salle d'attente", "Réception", "Bureau administratif", "Salle de réunion",
+        "Cafétéria", "Cuisine", "Toilettes publiques", "Vestiaire", "Corridor",
+        "Hall d'entrée", "Escalier", "Ascenseur", "Local technique", "Autre"
+      ],
+      "12. Transport et logistique": [
+        "Terminal de transport", "Salle d'attente", "Hall de départ", "Hall d'arrivée",
+        "Billetterie", "Comptoir de service", "Salle des employés", "Salle de contrôle",
+        "Bureau administratif", "Quai", "Entrepôt logistique", "Zone de tri",
+        "Zone de manutention", "Quai de chargement", "Aire de stationnement",
+        "Garage mécanique", "Atelier de réparation", "Salle de repos des chauffeurs",
+        "Vestiaire", "Toilettes", "Cuisine", "Cafétéria", "Corridor", "Autre"
+      ],
+      "13. Locaux techniques et spécialisés": [
+        "Salle de serveurs", "Centre de données", "Salle électrique", "Salle mécanique",
+        "Local de ventilation", "Local de climatisation", "Local de chauffage",
+        "Local de plomberie", "Local de pompage", "Local de filtration",
+        "Local de génératrice", "Local de transformateurs", "Salle de batteries",
+        "Local d'entreposage", "Salle de produits d'entretien", "Salle de déchets",
+        "Local de recyclage", "Salle de décontamination", "Salle de lavage",
+        "Salle de séchage", "Salle de préparation", "Salle de stockage", "Chambre forte",
+        "Local de sécurité", "Salle de surveillance", "Poste de garde", "Autre"
+      ],
+      "14. Espaces de circulation": [
+        "Corridor", "Passage", "Escalier", "Palier", "Rampe", "Ascenseur",
+        "Vestibule", "Entrée", "Sortie", "Sas", "Passerelle", "Mezzanine", "Autre"
+      ],
+      "15. Espaces extérieurs": [
+        "Balcon", "Terrasse", "Patio", "Véranda", "Entrée extérieure", "Escalier extérieur",
+        "Passage couvert", "Aire de chargement extérieure", "Quai extérieur", "Trottoir",
+        "Stationnement extérieur", "Garage extérieur", "Aire de repos extérieure", "Autre"
+      ],
+      "16. Espaces sanitaires": [
+        "Toilette individuelle", "Toilettes multiples", "Urinoirs", "Lavabos",
+        "Douches", "Baignoires", "Vestiaire", "Salle de change", "Salle de bain accessible", "Autre"
+      ]
+    };
+
+    // Chargement de la banque avec persistance locale
+    let customDb = JSON.parse(localStorage.getItem('cleaning_buildings_db') || 'null');
+    let BUILDINGS_DB = customDb || JSON.parse(JSON.stringify(DEFAULT_BUILDINGS_DB));
+
+    function saveBuildingsDb() {
+      localStorage.setItem('cleaning_buildings_db', JSON.stringify(BUILDINGS_DB));
+    }
+
+    // ----------------------------------------------------
     // BIBLIOTHÈQUE ISSA 540 & TAUX
     // ----------------------------------------------------
     const TASK_CATALOG = {
@@ -302,6 +510,111 @@
     let entries = [];
 
     // ----------------------------------------------------
+    // INITIALISATION DES MENUS DÉROULANTS INTELLIGENTS
+    // ----------------------------------------------------
+    const selectBuildingType = document.getElementById('select-building-type');
+    const selectRoomType = document.getElementById('select-room-type');
+    const inputFinalRoom = document.getElementById('input-final-room');
+    const btnToggleSearch = document.getElementById('btn-toggle-search');
+    const boxSearchRoom = document.getElementById('box-search-room');
+    const inputSearchRoom = document.getElementById('input-search-room');
+    const btnSaveCustomRoom = document.getElementById('btn-save-custom-room');
+
+    function populateBuildings() {
+      selectBuildingType.innerHTML = '';
+      for (const bldg in BUILDINGS_DB) {
+        const opt = document.createElement('option');
+        opt.value = bldg;
+        opt.textContent = bldg;
+        selectBuildingType.appendChild(opt);
+      }
+      populateRoomsForBuilding(selectBuildingType.value);
+    }
+
+    function populateRoomsForBuilding(bldgName, filterKeyword = '') {
+      selectRoomType.innerHTML = '';
+      let list = BUILDINGS_DB[bldgName] || [];
+
+      if (filterKeyword) {
+        list = list.filter(r => r.toLowerCase().includes(filterKeyword.toLowerCase()));
+      }
+
+      list.forEach(room => {
+        const opt = document.createElement('option');
+        opt.value = room;
+        opt.textContent = room;
+        selectRoomType.appendChild(opt);
+      });
+
+      if (selectRoomType.options.length > 0) {
+        selectRoomType.selectedIndex = 0;
+        onRoomChange();
+      } else {
+        inputFinalRoom.value = filterKeyword || 'Autre local';
+      }
+    }
+
+    function onRoomChange() {
+      const selected = selectRoomType.value;
+      if (selected === 'Autre') {
+        inputFinalRoom.value = '';
+        inputFinalRoom.placeholder = 'Entrez le nom de la pièce personnalisée...';
+        inputFinalRoom.focus();
+      } else {
+        inputFinalRoom.value = selected;
+      }
+    }
+
+    selectBuildingType.addEventListener('change', () => {
+      populateRoomsForBuilding(selectBuildingType.value, inputSearchRoom.value.trim());
+    });
+
+    selectRoomType.addEventListener('change', onRoomChange);
+
+    btnToggleSearch.addEventListener('click', () => {
+      boxSearchRoom.classList.toggle('hidden');
+      if (!boxSearchRoom.classList.contains('hidden')) {
+        inputSearchRoom.focus();
+      } else {
+        inputSearchRoom.value = '';
+        populateRoomsForBuilding(selectBuildingType.value);
+      }
+    });
+
+    inputSearchRoom.addEventListener('input', (e) => {
+      const kw = e.target.value.trim();
+      populateRoomsForBuilding(selectBuildingType.value, kw);
+    });
+
+    // Mémoriser une pièce personnalisée dans la banque de données
+    btnSaveCustomRoom.addEventListener('click', () => {
+      const newRoom = inputFinalRoom.value.trim();
+      const currentBldg = selectBuildingType.value;
+
+      if (!newRoom) {
+        alert('Veuillez entrer un nom de pièce avant d\'enregistrer.');
+        return;
+      }
+
+      if (!BUILDINGS_DB[currentBldg].includes(newRoom)) {
+        // Insérer avant "Autre"
+        const idx = BUILDINGS_DB[currentBldg].indexOf('Autre');
+        if (idx !== -1) {
+          BUILDINGS_DB[currentBldg].splice(idx, 0, newRoom);
+        } else {
+          BUILDINGS_DB[currentBldg].push(newRoom);
+        }
+        saveBuildingsDb();
+        populateRoomsForBuilding(currentBldg);
+        selectRoomType.value = newRoom;
+        inputFinalRoom.value = newRoom;
+        alert(`« ${newRoom} » a été ajouté à la banque « ${currentBldg} » pour toutes vos prochaines soumissions.`);
+      } else {
+        alert(`« ${newRoom} » existe déjà dans cette catégorie.`);
+      }
+    });
+
+    // ----------------------------------------------------
     // GESTION DU FORMULAIRE MANUEL
     // ----------------------------------------------------
     const formItem = document.getElementById('form-item');
@@ -315,7 +628,7 @@
 
     formItem.addEventListener('submit', (e) => {
       e.preventDefault();
-      const room = document.getElementById('input-room').value.trim() || 'Zone générale';
+      const room = inputFinalRoom.value.trim() || selectRoomType.value || 'Zone générale';
       const taskKey = selectTask.value;
       const qty = parseFloat(document.getElementById('input-qty').value) || 0;
       const freq = parseInt(document.getElementById('select-freq').value, 10) || 1;
@@ -424,7 +737,7 @@
     }
 
     function parseVoiceCommand(text) {
-      const currentRoom = document.getElementById('input-room').value.trim() || 'Inspection en cours';
+      const currentRoom = inputFinalRoom.value.trim() || selectRoomType.value || 'Inspection vocale';
       const numbers = text.match(/\d+/g);
       const qty = numbers ? parseFloat(numbers[0]) : 1;
 
@@ -626,21 +939,23 @@
       }
     });
 
-    // Exemple de test complet
+    // Exemple de test
     document.getElementById('btn-sample').addEventListener('click', () => {
       entries = [];
-      addEntry('Aires ouvertes & Corridors', 'carpet_wand_15', 2500, 1);
-      addEntry('Aires ouvertes & Corridors', 'carpet_encapsulation', 2500, 2);
-      addEntry('Cafétéria & Entrée', 'floor_strip', 1000, 1);
-      addEntry('Cafétéria & Entrée', 'floor_wax', 1000, 1);
-      addEntry('Bureaux administratifs', 'office_desk', 30, 52);
-      addEntry('Bureaux administratifs', 'office_trash', 30, 52);
-      addEntry('Sanitaires Hommes/Femmes', 'restroom_toilet', 5, 52);
-      addEntry('Sanitaires Hommes/Femmes', 'restroom_urinal', 4, 52);
-      addEntry('Sanitaires Hommes/Femmes', 'restroom_sink', 4, 52);
+      addEntry('Corridor & Entrée', 'carpet_wand_15', 2500, 1);
+      addEntry('Corridor & Entrée', 'carpet_encapsulation', 2500, 2);
+      addEntry('Cafétéria', 'floor_strip', 1000, 1);
+      addEntry('Cafétéria', 'floor_wax', 1000, 1);
+      addEntry('Bureau individuel', 'office_desk', 30, 52);
+      addEntry('Bureau individuel', 'office_trash', 30, 52);
+      addEntry('Toilettes publiques', 'restroom_toilet', 5, 52);
+      addEntry('Toilettes publiques', 'restroom_urinal', 4, 52);
+      addEntry('Toilettes publiques', 'restroom_sink', 4, 52);
       render();
     });
 
+    // Initialisation
+    populateBuildings();
     render();
   </script>
 </body>
